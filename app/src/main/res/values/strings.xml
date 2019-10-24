@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">s326197mappe2</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="navigation_friends">Friends</string>
+    <string name="add_order_label">Add order</string>
+    <string name="add_friend_label">Add friend</string>
+    <string name="add_restaurant_label">Restaurant</string>
+    <string name="navigation_restaurant">Restaurant</string>
+</resources>
