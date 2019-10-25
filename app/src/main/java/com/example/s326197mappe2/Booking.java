@@ -11,6 +11,11 @@ public class Booking {
     private List<Friend> friendList;
     private Date date;
 
+    public Booking(){}
+    public Booking(Restaurant restaurant, Date date){
+        this.restaurant = restaurant;
+        this.date = date;
+    }
     public Booking(Restaurant restaurant, List<Friend> friendList, Date date){
         this.restaurant = restaurant;
         this.friendList = friendList;

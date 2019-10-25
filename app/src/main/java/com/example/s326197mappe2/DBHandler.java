@@ -7,8 +7,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.sql.SQLInput;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DBHandler extends SQLiteOpenHelper {
 
@@ -23,11 +26,16 @@ public class DBHandler extends SQLiteOpenHelper {
     private static String ADDRESS = "Address";
     private static String TYPE = "Type";
 
+    //********BOOKING**********//
+    private static String TABLE_BOOKING = "Bookings";
+    private static String RESTAURANT = "Restaurant";
+    private static String DATE = "Date";
+    private static String TABLE_BOOKING_FRIENDS = "Booking_Friends";
 
     //******COMMON ****//
     private static String KEY_NAME = "Name";
     private static String KEY_PH_NO = "Telephone";
-    private static int DATABASE_VERSION = 8;
+    private static int DATABASE_VERSION = 10;
     private static String DATABASE_NAME = "Restaurant Planner";
 
     private static final String TAG = "DBHandler";
@@ -35,6 +43,13 @@ public class DBHandler extends SQLiteOpenHelper {
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
+
+
+
+
+
+
 
     @Override
     public void onCreate(SQLiteDatabase db){
@@ -51,6 +66,26 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_RESTAURANTS_TABLE);
 
 
+        String CREATE_BOOKING_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_BOOKING + "(" +
+                KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                DATE + " DATETIME," +
+                "Restaurant_id INTEGER, " +
+                "FOREIGN KEY(Restaurant_id) REFERENCES Restaurants(" + RESTAURANT_KEY_ID + ")" +
+                ")";
+        Log.d("SQL", CREATE_BOOKING_TABLE);
+        db.execSQL(CREATE_BOOKING_TABLE);
+
+
+        String CREATE_BOOKING_FRIENDS_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_BOOKING_FRIENDS + "(" +
+                "booking_ID INTEGER, " +
+                "friends_ID INTEGER," +
+                "FOREIGN KEY(booking_ID) REFERENCES Booking(" + KEY_ID + "), " +
+                "FOREIGN KEY(friends_ID) REFERENCES Friends(" + KEY_ID + ")" +
+                ")";
+
+        Log.d("SQL", CREATE_BOOKING_FRIENDS_TABLE);
+        db.execSQL(CREATE_BOOKING_FRIENDS_TABLE);
+
 
         addFriend(db, new Friend("Chandler Bing", "55532321"));
         addFriend(db, new Friend("Monica Geller", "55532322"));
@@ -65,10 +100,19 @@ public class DBHandler extends SQLiteOpenHelper {
         addFriend(db, new Friend("Chandler Bing", "55532321"));
         addFriend(db, new Friend("Monica Geller", "55532322"));
 
+        Friend friend = new Friend("Monica Geller", "55532322");
+        Friend friend2 = new Friend("Chandler Bing", "55532322");
+
+        List<Friend> friends = new ArrayList<>();
+        friends.add(friend);
+        friends.add(friend2);
         addRestaurant(db, new Restaurant("Pizza4U", "That Way 3", "91919191", "Pizza"));
         addRestaurant(db, new Restaurant("El Castell", "That Way 4", "91988891", "Pizza"));
         addRestaurant(db, new Restaurant("Burger King", "That Way 5", "94449191", "Burger"));
 
+        Date date = new Date();
+        Booking booking = new Booking(new Restaurant("McDonalds", "That Way 6", "94449191", "Burger"), date);
+        addBooking(db, booking, friends);
     }
 
     @Override
@@ -210,18 +254,112 @@ public class DBHandler extends SQLiteOpenHelper {
                     restaurant.setAddress(cursor.getString(3));
                     restaurant.setType(cursor.getString(4));
                     restaurantsList.add(restaurant);
+
+
                 } while (cursor.moveToNext());
             }
         }
         return restaurantsList;
     }
 
+    public Restaurant getRestaurant(int id){
+        String select = "SELECT * FROM " + TABLE_RESTAURANTS + " WHERE " + KEY_ID + " = " + id;
+        Log.d("SQL: ", select);
+        try(SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(select, null)) {
+            if (cursor.moveToFirst() && !cursor.isAfterLast()) {
+
+                Restaurant restaurant = new Restaurant();
+                restaurant.setId(cursor.getInt(0));
+                restaurant.setName(cursor.getString(1));
+                restaurant.setTelephone(cursor.getString(2));
+                restaurant.setAddress(cursor.getString(3));
+                restaurant.setType(cursor.getString(4));
+
+                return restaurant;
+            }
+            return null;
+        }
+    }
 
     public void deleteRestaurant(long id){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_RESTAURANTS, KEY_ID + "= ?",
                 new String[] {Long.toString(id)});
         db.close();
+    }
+
+
+
+    /**************BOOKING*******************/
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault());
+
+    public void addBooking(SQLiteDatabase db, Booking booking, List<Friend> friendList){
+        ContentValues values = new ContentValues();
+
+        values.put(DATE, dateFormat.format(booking.getDate()));
+        values.put(RESTAURANT, booking.getRestaurant().getId());
+        long bookingId = db.insert(TABLE_BOOKING, null, values);
+
+        ContentValues values1 = new ContentValues();
+
+        for(Friend friend : friendList) {
+            values1.put("booking_id", bookingId);
+            values1.put("friend_id", friend.getId());
+            db.insert(TABLE_BOOKING_FRIENDS, null, values1);
+        }
+
+        Log.d("DBHandler", "Added restaurant: " + booking);
+    }
+
+    public List<Friend> getFriendBookings(Booking booking) {
+        List<Friend> friends = new ArrayList<>();
+        String select = String.format("SELECT %s.* FROM " + TABLE_FRIENDS + ", %s WHERE %s.%s = %s.%s AND %s.%s = " + booking.getId());
+
+
+        Log.d("SQL: ", "getFriendBookings: SQL " + select);
+
+        try (SQLiteDatabase db = this.getWritableDatabase();
+             Cursor cursor = db.rawQuery(select, null)) {
+
+            if (cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+
+                    Friend friend = new Friend();
+                    friend.setId(cursor.getInt(0));
+                    friend.setName(cursor.getString(1));
+                    friend.setTelephone(cursor.getString(2));
+
+                    friends.add(friend);
+
+                    cursor.moveToNext();
+                }
+            }
+        }
+
+        Log.d(TAG, "getFriendBookings: FRIENDS " + friends);
+
+        return friends;
+    }
+
+    public List<Booking> findAllBookings() {
+        List<Booking> bookingList = new ArrayList<Booking>();
+        String selectQuery = "SELECT * FROM " + TABLE_BOOKING;
+        try(SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null)) {
+            if (cursor.moveToFirst()) {
+                do {
+                    Booking booking = new Booking();
+                    booking.setId(cursor.getInt(0));
+                    booking.setDate(dateFormat.parse(cursor.getString(1)));
+                    booking.setRestaurant(getRestaurant(cursor.getInt(2)));
+                } while (cursor.moveToNext());
+            }
+        }catch (java.text.ParseException e){
+            e.printStackTrace();
+        }
+        return bookingList;
     }
 
 

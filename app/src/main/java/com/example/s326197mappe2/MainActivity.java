@@ -29,20 +29,20 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.HomeFragmentListener {
+public class MainActivity extends AppCompatActivity {
 
     protected int currentDestination;
     private DBHandler db;
 
 
-    @Override
-    public void onButtonClick() {
-        Log.d("MainActivity", "Er i onButtonClick");
-        for(Friend friend : db.findAllFriends()){
-            Log.d("MainActivity: ", "Friend: " + friend.getName());
-        }
-//        loadFragment(new AddOrderFragment());
-    }
+//    @Override
+//    public void onButtonClick() {
+//        Log.d("MainActivity", "Er i onButtonClick");
+//        for(Friend friend : db.findAllFriends()){
+//            Log.d("MainActivity: ", "Friend: " + friend.getName());
+//        }
+////        loadFragment(new AddOrderFragment());
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

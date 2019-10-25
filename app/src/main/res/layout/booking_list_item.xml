@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/restaurant_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="30dp"
+        android:text="Pizza4U"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/restaurant_name"
+        android:textSize="12sp"
+        android:text="Hei Der"/>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="30dp"
+        android:layout_below="@+id/type"
+        android:textSize="12sp"
+        android:text="91361611"/>
+
+    <TextView
+        android:id="@+id/amount_of_friends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="30dp"
+        android:layout_below="@+id/date"
+        android:textSize="12sp"
+        android:text="That way 3"/>
+
+
+
+    <Button
+        android:id="@+id/delete_button"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:background="#FFFFFF"
+        android:drawableEnd="@drawable/ic_more_vert_black_24dp"
+        android:layout_height="match_parent"
+        android:textSize="14sp"/>
+
+
+</RelativeLayout>
