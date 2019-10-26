@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Booking {
 
-    private int id;
+    private long id;
     private Restaurant restaurant;
     private List<Friend> friendList;
     private Date date;
@@ -22,11 +22,11 @@ public class Booking {
         this.date = date;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

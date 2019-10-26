@@ -2,6 +2,7 @@ package com.example.s326197mappe2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -52,7 +53,7 @@ public class FriendAdapter extends ArrayAdapter<Friend> {
                         int id = item.getItemId();
                         switch (id)
                         {
-                            case R.id.item_edit: Log.i ("FriendsFragment", "edit"); break;
+                            case R.id.item_edit: editFriend(friend); break;
                             case R.id.item_delete: deleteFriend(friend);
 
                                 break;
@@ -74,6 +75,12 @@ public class FriendAdapter extends ArrayAdapter<Friend> {
     private void deleteFriend(Friend friend){
         dbHandler.delete(friend.getId());
         loadLists();
+    }
+
+    private void editFriend(Friend friend){
+        Intent intent = new Intent(context, AddFriendActivity.class);
+        intent.putExtra("FriendID", Long.toString(friend.getId()));
+        context.startActivity(intent);
     }
 
     public void loadLists(){

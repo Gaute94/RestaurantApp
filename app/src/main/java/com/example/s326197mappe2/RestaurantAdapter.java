@@ -2,6 +2,7 @@ package com.example.s326197mappe2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -55,7 +56,7 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
                         int id = item.getItemId();
                         switch (id)
                         {
-                            case R.id.item_edit: Log.i ("RestaurantFragment", "edit"); break;
+                            case R.id.item_edit: editRestaurant(restaurant); break;
                             case R.id.item_delete: deleteRestaurant(restaurant);
 
                                 break;
@@ -79,6 +80,12 @@ public class RestaurantAdapter extends ArrayAdapter<Restaurant> {
     private void deleteRestaurant(Restaurant restaurant){
         dbHandler.deleteRestaurant(restaurant.getId());
         loadLists();
+    }
+
+    private void editRestaurant(Restaurant restaurant){
+        Intent intent = new Intent(context, AddRestaurantActivity.class);
+        intent.putExtra("RestaurantID", Long.toString(restaurant.getId()));
+        context.startActivity(intent);
     }
 
     public void loadLists(){

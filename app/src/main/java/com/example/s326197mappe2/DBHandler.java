@@ -35,7 +35,7 @@ public class DBHandler extends SQLiteOpenHelper {
     //******COMMON ****//
     private static String KEY_NAME = "Name";
     private static String KEY_PH_NO = "Telephone";
-    private static int DATABASE_VERSION = 10;
+    private static int DATABASE_VERSION = 20;
     private static String DATABASE_NAME = "Restaurant Planner";
 
     private static final String TAG = "DBHandler";
@@ -43,13 +43,6 @@ public class DBHandler extends SQLiteOpenHelper {
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-
-
-
-
-
-
-
 
     @Override
     public void onCreate(SQLiteDatabase db){
@@ -100,19 +93,25 @@ public class DBHandler extends SQLiteOpenHelper {
         addFriend(db, new Friend("Chandler Bing", "55532321"));
         addFriend(db, new Friend("Monica Geller", "55532322"));
 
-        Friend friend = new Friend("Monica Geller", "55532322");
-        Friend friend2 = new Friend("Chandler Bing", "55532322");
 
-        List<Friend> friends = new ArrayList<>();
-        friends.add(friend);
-        friends.add(friend2);
+
+//        List<Friend> friends = new ArrayList<>();
+//        friends.add(friend);
+//        friends.add(friend2);
         addRestaurant(db, new Restaurant("Pizza4U", "That Way 3", "91919191", "Pizza"));
         addRestaurant(db, new Restaurant("El Castell", "That Way 4", "91988891", "Pizza"));
         addRestaurant(db, new Restaurant("Burger King", "That Way 5", "94449191", "Burger"));
 
-        Date date = new Date();
-        Booking booking = new Booking(new Restaurant("McDonalds", "That Way 6", "94449191", "Burger"), date);
-        addBooking(db, booking, friends);
+//        Date date = new Date();
+//        Booking booking = new Booking(new Restaurant("McDonalds", "That Way 6", "94449191", "Burger"),  friends, date);
+//        addBooking(db, booking, friends);
+//        Log.d("DBHandler", "Date: " + date);
+//        Log.d("DBHandler", "Booking Restaurant Name: " + booking.getRestaurant().getName());
+//        for(Friend friend1 : friends){
+//            Log.d("DBHandler", "Booking Friend List, Added: " + friend1.getName());
+//        }
+
+
     }
 
     @Override
@@ -142,7 +141,18 @@ public class DBHandler extends SQLiteOpenHelper {
         Log.d("DBHandler", "Added friend: " + friend);
     }
 
-    public List<Friend> findAllFriends() {
+    public int editFriend(Friend friend){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, friend.getName());
+        values.put(KEY_PH_NO, friend.getTelephone());
+        int updated = db.update(TABLE_FRIENDS, values, KEY_ID + "= ?",
+                new String[]{String.valueOf(friend.getId())});
+        db.close();
+        return updated;
+    }
+
+    public List<Friend> findAllFriends(){
         List<Friend> friendsList = new ArrayList<Friend>();
         String selectQuery = "SELECT * FROM " + TABLE_FRIENDS;
         try(SQLiteDatabase db = this.getWritableDatabase();
@@ -158,6 +168,20 @@ public class DBHandler extends SQLiteOpenHelper {
             }
         }
         return friendsList;
+    }
+
+    public Friend findFriend(long id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_FRIENDS, new String[] {
+                        KEY_ID, KEY_NAME, KEY_PH_NO}, KEY_ID + "= ?",
+                new String[] {String.valueOf(id)}, null, null, null, null);
+        if(cursor != null) cursor.moveToFirst();
+        Friend friend = new
+                Friend(Long.parseLong(cursor.getString(0)),
+                cursor.getString(1), cursor.getString(2));
+        cursor.close();
+        db.close();
+        return friend;
     }
 
 //    public String showListOfFriends(){
@@ -262,7 +286,7 @@ public class DBHandler extends SQLiteOpenHelper {
         return restaurantsList;
     }
 
-    public Restaurant getRestaurant(int id){
+    public Restaurant getRestaurant(long id){
         String select = "SELECT * FROM " + TABLE_RESTAURANTS + " WHERE " + KEY_ID + " = " + id;
         Log.d("SQL: ", select);
         try(SQLiteDatabase db = this.getWritableDatabase();
@@ -282,6 +306,19 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
+    public int editRestaurant(Restaurant restaurant){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, restaurant.getName());
+        values.put(KEY_PH_NO, restaurant.getTelephone());
+        values.put(ADDRESS, restaurant.getAddress());
+        values.put(TYPE, restaurant.getType());
+        int updated = db.update(TABLE_RESTAURANTS, values, KEY_ID + "= ?",
+                new String[]{String.valueOf(restaurant.getId())});
+        db.close();
+        return updated;
+    }
+
     public void deleteRestaurant(long id){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_RESTAURANTS, KEY_ID + "= ?",
@@ -297,53 +334,63 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public void addBooking(SQLiteDatabase db, Booking booking, List<Friend> friendList){
         ContentValues values = new ContentValues();
-
+        Log.d("BOOKING", "Inside addBooking");
         values.put(DATE, dateFormat.format(booking.getDate()));
-        values.put(RESTAURANT, booking.getRestaurant().getId());
-        long bookingId = db.insert(TABLE_BOOKING, null, values);
+        values.put("restaurant_id", booking.getRestaurant().getId());
+        booking.setId(db.insert(TABLE_BOOKING, null, values));
 
         ContentValues values1 = new ContentValues();
 
-        for(Friend friend : friendList) {
-            values1.put("booking_id", bookingId);
-            values1.put("friend_id", friend.getId());
-            db.insert(TABLE_BOOKING_FRIENDS, null, values1);
+        Log.d("BOOKING", "Booking date: " + booking.getDate());
+        Log.d("BOOKING", "Booking RestaurantName: " + booking.getRestaurant().getName());
+        for(Friend friend : friendList){
+            Log.d("BOOKING", "Booking Friend Name: " + friend.getName());
         }
 
-        Log.d("DBHandler", "Added restaurant: " + booking);
+        for(Friend friend : friendList) {
+            values1.put("booking_ID", booking.getId());
+            values1.put("friends_ID", friend.getId());
+            db.insert(TABLE_BOOKING_FRIENDS, null, values1);
+            Log.d("BOOKING", "Booking Friend ID: " + friend.getId());
+        }
+
+        Log.d("DBHandler", "Added Booking: " + booking);
     }
 
     public List<Friend> getFriendBookings(Booking booking) {
+        Log.d("DBHandler", "currently inside getFriendBookings ");
         List<Friend> friends = new ArrayList<>();
-        String select = String.format("SELECT %s.* FROM " + TABLE_FRIENDS + ", %s WHERE %s.%s = %s.%s AND %s.%s = " + booking.getId());
+        String select = "SELECT " + TABLE_FRIENDS + ".*" + " FROM " + TABLE_FRIENDS + ", " + TABLE_BOOKING_FRIENDS + " WHERE " + TABLE_FRIENDS +"."+KEY_ID+
+                " = " + TABLE_BOOKING_FRIENDS+".friends_ID AND " + TABLE_BOOKING_FRIENDS +".booking_ID = " + booking.getId();
 
 
         Log.d("SQL: ", "getFriendBookings: SQL " + select);
 
         try (SQLiteDatabase db = this.getWritableDatabase();
              Cursor cursor = db.rawQuery(select, null)) {
-
+            Log.d("TRY", "INSIDE TRY");
             if (cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
+                while (!cursor.isAfterLast())
+                {
 
                     Friend friend = new Friend();
                     friend.setId(cursor.getInt(0));
                     friend.setName(cursor.getString(1));
                     friend.setTelephone(cursor.getString(2));
-
                     friends.add(friend);
-
+                    Log.d("CURSOR-NAME: ", cursor.getString(1));
                     cursor.moveToNext();
                 }
             }
         }
 
-        Log.d(TAG, "getFriendBookings: FRIENDS " + friends);
+        Log.d("SQL", "getFriendBookings: FRIENDS " + friends);
 
         return friends;
     }
 
     public List<Booking> findAllBookings() {
+        Log.d("DBHandler", "currently inside findAllBookings ");
         List<Booking> bookingList = new ArrayList<Booking>();
         String selectQuery = "SELECT * FROM " + TABLE_BOOKING;
         try(SQLiteDatabase db = this.getWritableDatabase();
@@ -354,6 +401,7 @@ public class DBHandler extends SQLiteOpenHelper {
                     booking.setId(cursor.getInt(0));
                     booking.setDate(dateFormat.parse(cursor.getString(1)));
                     booking.setRestaurant(getRestaurant(cursor.getInt(2)));
+                    booking.setFriendList(getFriendBookings(booking));
                 } while (cursor.moveToNext());
             }
         }catch (java.text.ParseException e){
@@ -361,7 +409,4 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         return bookingList;
     }
-
-
-
 }

@@ -56,6 +56,14 @@
         android:text="Legg til"
         android:onClick="addFriend"
         android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/edit_friend_button"
+        android:layout_width="180dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/linearLayout"
+        android:text="Endre"
+        android:onClick="editFriend"
+        android:layout_height="wrap_content"/>
 
 
 </RelativeLayout>

@@ -72,7 +72,7 @@ public class BookingAdapter extends ArrayAdapter<Booking> {
         date.setText(booking.getDate().toString());
         amount_of_friends.setText(booking.getFriendList().size());
         type.setText(String.format("(%s)", booking.getRestaurant().getType()));
-        Log.d("RestaurantAdapter", "Booking Restaurant: " + booking.getRestaurant().getName() + ", Booking Type: " + booking.getRestaurant().getType());
+        Log.d("BookingAdapter", "Booking Restaurant: " + booking.getRestaurant().getName() + ", Booking Type: " + booking.getRestaurant().getType());
 
         Log.d("BookingAdapter", "Amount of friends: " + booking.getFriendList().size());
         return convertView;
@@ -84,7 +84,17 @@ public class BookingAdapter extends ArrayAdapter<Booking> {
 //    }
 
     public void loadLists(){
-        ArrayList<Booking> bookingList = new ArrayList<>(dbHandler.findAllRestaurants());
+        Log.d("BookingAdapter", "Inside loadList");
+
+        ArrayList<Booking> bookingList = new ArrayList<>(dbHandler.findAllBookings());
+        for(Booking booking : bookingList){
+            Log.d("BookingAdapter", "Booking restaurant: " + booking.getRestaurant().getName());
+            for(Friend friend : booking.getFriendList()){
+                Log.d("BookingAdapter", "Booking Friends: " + friend.getName());
+            }
+        }
+
+
         clear();
         addAll(bookingList);
         notifyDataSetChanged();

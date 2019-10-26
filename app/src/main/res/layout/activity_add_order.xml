@@ -46,8 +46,9 @@
     android:layout_marginStart="60dp"
     />
     <EditText
+        android:id="@+id/date"
         android:layout_width="240dp"
-        android:inputType="time"
+        android:inputType="date"
         android:layout_marginStart="60dp"
         android:layout_height="wrap_content"
         />
@@ -60,9 +61,11 @@
         android:layout_marginStart="60dp"
         />
     <EditText
+
         android:layout_width="240dp"
         android:layout_marginStart="60dp"
         android:layout_height="wrap_content"
         android:text="Denne skal gjøres om til ListView?"
         />
+
 </LinearLayout>
