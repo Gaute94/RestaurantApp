@@ -1,10 +1,14 @@
 package com.example.s326197mappe2;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("MainActivity", "Current Destination: " + navController.getCurrentDestination().getLabel().toString());
             }
         });
+        startService();
     }
 
     @Override
@@ -73,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.mybutton) {
             addNewActivity();
+        }
+
+        if (id == R.id.settings_button){
+            Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
+            MainActivity.this.startActivity(myIntent);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -115,6 +125,23 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commitAllowingStateLoss();
     }
 
+    public void startService() {
+//        Intent intent= new Intent(this, NotificationService.class);
+//        this.startService(intent);
+        Intent intent = new Intent();
+        intent.setAction("com.example.s326197mappe2.mittbroadcast");
+        sendBroadcast(intent);
+    }
 
+
+    public void stoppPeriodisk() {
+        Intent i = new Intent(this, NotificationService.class);
+        PendingIntent pintent = PendingIntent.getService(this, 0, i, 0);
+        AlarmManager alarm =
+                (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (alarm!= null) {
+            alarm.cancel(pintent);
+        }
+    }
 
 }

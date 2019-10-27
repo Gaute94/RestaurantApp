@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
+        <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
@@ -18,15 +21,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddBookingActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/add_order_label"/>
-        <activity android:name=".AddFriendActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/add_friend_label"/>
-        <activity android:name=".AddRestaurantActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/add_restaurant_label"/>
-    </application>
+        <activity
+            android:name=".AddBookingActivity"
+            android:label="@string/add_order_label"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".AddFriendActivity"
+            android:label="@string/add_friend_label"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".AddRestaurantActivity"
+            android:label="@string/add_restaurant_label"
+            android:parentActivityName=".MainActivity" />
+        <service android:name=".NotificationService"></service>
+        <receiver android:name=".NotificationBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.example.serviceeksempel.mittbroadcast" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".SetPeriodicService"></service>
 
+    </application>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SEND_SMS"/>
 </manifest>
