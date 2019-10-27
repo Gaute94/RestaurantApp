@@ -29,10 +29,20 @@
     <PreferenceCategory app:title="Tid">
 
         <EditTextPreference
-            app:key="signature"
+            app:key="time_key"
             app:defaultValue="15:13"
             app:title="Tidspunkt for varsler/SMS"
             app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+    <PreferenceCategory app:title="Melding">
+
+        <EditTextPreference
+        app:key="sms_text"
+        app:defaultValue="Hei, du har en eller flere restaurantbestillinger i dag."
+        app:title="SMS melding"
+        app:useSimpleSummaryProvider="true" />
+
 
     </PreferenceCategory>
 

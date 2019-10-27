@@ -373,6 +373,7 @@ public class DBHandler extends SQLiteOpenHelper {
         Log.d("BOOKING", "Inside addBooking!: " + booking);
 
         values.put(DATE, dateFormat.format(booking.getDate()));
+        Log.d("ADDBOOKING", "DateFormat: " + dateFormat.format(booking.getDate()));
         values.put("Restaurant_id", booking.getRestaurant().getId());
         booking.setId(db.insert(TABLE_BOOKING, null, values));
 
@@ -526,6 +527,9 @@ public class DBHandler extends SQLiteOpenHelper {
                     Booking booking = new Booking();
                     booking.setId(cursor.getInt(0));
                     booking.setDate(dateFormat.parse(cursor.getString(1)));
+                    Log.d("BOOKING", "DateFormatParse: " + dateFormat.parse(cursor.getString(1)));
+                    Log.d("BOOKING", "Date-Parse (cursor): " + cursor.getString(1));
+
                     Log.d("BOOKING", "Cursorint: " + cursor.getInt(2));
 
                     booking.setRestaurant(getRestaurant(cursor.getInt(2)));

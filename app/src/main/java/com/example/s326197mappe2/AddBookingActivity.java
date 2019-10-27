@@ -87,14 +87,17 @@ public class AddBookingActivity extends AppCompatActivity implements
     }
 
     public void addBooking(View view){
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, mYear);
         calendar.set(Calendar.MONTH, mMonth);
-        calendar.set(Calendar.DAY_OF_MONTH, mMonth);
+        calendar.set(Calendar.DAY_OF_MONTH, mDay);
         calendar.set(Calendar.HOUR_OF_DAY, mHour);
         calendar.set(Calendar.MINUTE, mMinute);
 
+
         Booking booking = new Booking(restaurant,friends, calendar.getTime());
+        Log.d("AddBookingActivity", "BookingTime: " + booking.getDate());
         dbHandler.addBooking(booking);
 
         finish();
@@ -121,7 +124,9 @@ public class AddBookingActivity extends AppCompatActivity implements
                                               int monthOfYear, int dayOfMonth) {
 
                             txtDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-
+                            mYear = year;
+                            mMonth = monthOfYear;
+                            mDay = dayOfMonth;
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
@@ -140,7 +145,8 @@ public class AddBookingActivity extends AppCompatActivity implements
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay,
                                               int minute) {
-
+                            mMinute = minute;
+                            mHour = hourOfDay;
                             txtTime.setText(hourOfDay + ":" + minute);
                         }
                     }, mHour, mMinute, true);
