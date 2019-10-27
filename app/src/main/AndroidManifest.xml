@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddOrderActivity"
+        <activity android:name=".AddBookingActivity"
             android:parentActivityName=".MainActivity"
             android:label="@string/add_order_label"/>
         <activity android:name=".AddFriendActivity"

@@ -38,6 +38,7 @@ public class FriendsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         friendListView = (ListView) getView().findViewById(R.id.list_view_friends);
+        friendListView.setEmptyView(getView().findViewById(R.id.empty));
         ArrayList<Friend> friendList = new ArrayList<>(db.findAllFriends());
         friendAdapter = new FriendAdapter(this.getContext(), 0, friendList);
         friendListView.setAdapter(friendAdapter);

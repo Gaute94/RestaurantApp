@@ -2,7 +2,7 @@ package com.example.s326197mappe2;
 
 public class Restaurant {
 
-    private int id;
+    private long id;
     private String name;
     private String address;
     private String telephone;
@@ -49,11 +49,22 @@ public class Restaurant {
         this.type = type;
     }
 
-    public int getId(){
+    public long getId(){
         return this.id;
     }
 
-    public void setId(int id){
+    public void setId(long id){
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Restaurant{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

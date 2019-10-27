@@ -40,6 +40,7 @@ public class RestaurantFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         restaurantListView = (ListView) getView().findViewById(R.id.list_view_restaurants);
+        restaurantListView.setEmptyView(getView().findViewById(R.id.empty));
         ArrayList<Restaurant> restaurantList = new ArrayList<>(db.findAllRestaurants());
         restaurantAdapter = new RestaurantAdapter(this.getContext(), 0, restaurantList);
         restaurantListView.setAdapter(restaurantAdapter);

@@ -2,6 +2,7 @@ package com.example.s326197mappe2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -12,8 +13,10 @@ import android.widget.Button;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class BookingAdapter extends ArrayAdapter<Booking> {
 
@@ -36,7 +39,7 @@ public class BookingAdapter extends ArrayAdapter<Booking> {
             convertView = inflater.inflate(R.layout.booking_list_item, null);
         }
 
-        TextView restaurant_name = (TextView) convertView.findViewById(R.id.name);
+        TextView restaurant_name = (TextView) convertView.findViewById(R.id.restaurant_name);
         TextView date = (TextView) convertView.findViewById(R.id.date);
         TextView amount_of_friends = (TextView) convertView.findViewById(R.id.amount_of_friends);
         TextView type = (TextView) convertView.findViewById(R.id.type);
@@ -55,8 +58,8 @@ public class BookingAdapter extends ArrayAdapter<Booking> {
                         int id = item.getItemId();
                         switch (id)
                         {
-                            case R.id.item_edit: Log.i ("BookingFragment", "edit"); break;
-                            case R.id.item_delete: ;
+                            case R.id.item_edit: editBooking(booking); break;
+                            case R.id.item_delete: deleteBooking(booking);
 
                                 break;
                         }
@@ -68,33 +71,49 @@ public class BookingAdapter extends ArrayAdapter<Booking> {
             }
         });
 
-        restaurant_name.setText(booking.getRestaurant().getName());
-        date.setText(booking.getDate().toString());
-        amount_of_friends.setText(booking.getFriendList().size());
-        type.setText(String.format("(%s)", booking.getRestaurant().getType()));
-        Log.d("BookingAdapter", "Booking Restaurant: " + booking.getRestaurant().getName() + ", Booking Type: " + booking.getRestaurant().getType());
+        Log.d("BookingAdapter", "getView, booking: " + booking);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
+
+        Log.d("BookingAdapter", "DATE: " + booking.getDate());
+        Log.d("BookingAdapter", "FORMATTED DATE: " + dateFormat.format(booking.getDate()));
+        if(booking.getRestaurant()!=null) {
+            restaurant_name.setText(booking.getRestaurant().getName());
+            type.setText(String.format("(%s)", booking.getRestaurant().getType()));
+            Log.d("BookingAdapter", "Booking Restaurant: " + booking.getRestaurant().getName() + ", Booking Type: " + booking.getRestaurant().getType());
+
+        }
+        date.setText(dateFormat.format(booking.getDate()));
+        String str = "Antall venner: " + booking.getFriendList().size();
+
+        amount_of_friends.setText(str);
+
 
         Log.d("BookingAdapter", "Amount of friends: " + booking.getFriendList().size());
         return convertView;
     }
 
-//    private void deleteBooking(Booking booking){
-//        dbHandler.deleteBooking(booking.getId());
-//        loadLists();
-//    }
+
+    private void deleteBooking(Booking booking){
+        dbHandler.deleteBooking(booking.getId());
+        loadLists();
+    }
+
+    private void editBooking(Booking booking){
+        Intent intent = new Intent(context, AddBookingActivity.class);
+        intent.putExtra("BookingID", Long.toString(booking.getId()));
+        context.startActivity(intent);
+    }
 
     public void loadLists(){
         Log.d("BookingAdapter", "Inside loadList");
 
         ArrayList<Booking> bookingList = new ArrayList<>(dbHandler.findAllBookings());
-        for(Booking booking : bookingList){
-            Log.d("BookingAdapter", "Booking restaurant: " + booking.getRestaurant().getName());
-            for(Friend friend : booking.getFriendList()){
-                Log.d("BookingAdapter", "Booking Friends: " + friend.getName());
-            }
-        }
-
-
+//        for(Booking booking : bookingList){
+//            Log.d("BookingAdapter", "Booking restaurant: " + booking.getRestaurant().getName());
+//            for(Friend friend : booking.getFriendList()){
+//                Log.d("BookingAdapter", "Booking Friends: " + friend.getName());
+//            }
+//        }
         clear();
         addAll(bookingList);
         notifyDataSetChanged();

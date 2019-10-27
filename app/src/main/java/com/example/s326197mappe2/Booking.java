@@ -53,4 +53,14 @@ public class Booking {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "id=" + id +
+                ", restaurant=" + restaurant +
+                ", friendList=" + friendList +
+                ", date=" + date +
+                '}';
+    }
 }

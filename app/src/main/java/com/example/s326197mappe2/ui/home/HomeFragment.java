@@ -49,7 +49,9 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bookingListView = (ListView) getView().findViewById(R.id.list_view_1);
+        bookingListView.setEmptyView(getView().findViewById(R.id.empty));
         ArrayList<Booking> bookingList = new ArrayList<>(db.findAllBookings());
+        Log.d("HomeFragment", "FindAllBookings: " + db.findAllBookings());
         bookingAdapter = new BookingAdapter(this.getContext(), 0, bookingList);
         bookingListView.setAdapter(bookingAdapter);
         bookingAdapter.loadLists();

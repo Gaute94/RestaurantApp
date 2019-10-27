@@ -5,12 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import com.example.s326197mappe2.ui.home.AddOrderFragment;
-import com.example.s326197mappe2.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -24,10 +19,6 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -88,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addNewActivity(){
         switch (currentDestination){
-            case R.id.navigation_home: startNewActivity(AddOrderActivity.class);
+            case R.id.navigation_home: startNewActivity(AddBookingActivity.class);
                 break;
             case R.id.navigation_friends: startNewActivity(AddFriendActivity.class);
                 break;

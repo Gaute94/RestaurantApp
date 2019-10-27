@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <RelativeLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="20dp"
+        >
+        <TextView
+            android:id="@+id/date_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dato"
+            android:layout_marginTop="30dp"
+            />
+        <EditText
+            android:id="@+id/date"
+            android:layout_width="140dp"
+            android:layout_below="@+id/date_label"
+            android:layout_height="wrap_content"
+            />
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/date_button"
+            android:layout_below="@+id/date_label"
+            android:layout_toEndOf="@+id/date"
+            android:text="Velg Dato"/>
+        <TextView
+            android:id="@+id/time_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/date"
+            android:text="Tid"
+            android:layout_marginTop="30dp"
+            />
+        <EditText
+            android:id="@+id/time"
+            android:layout_width="140dp"
+            android:layout_below="@+id/time_label"
+            android:layout_height="wrap_content"
+            />
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_button"
+            android:layout_below="@+id/time_label"
+            android:layout_toEndOf="@+id/time"
+            android:text="Velg Dato"/>
+
+
+    </RelativeLayout>
+    <Button
+        android:id="@+id/select_restaurant_button"
+        android:layout_width="180dp"
+        android:layout_below="@id/linearLayout"
+        android:layout_centerInParent="true"
+        android:text="Velg restaurant"
+        android:layout_marginBottom="20dp"
+        android:onClick="selectRestaurant"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/chosen_restaurant"
+        android:layout_centerInParent="true"
+        android:text="Ingen restaurant valgt"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/select_friends_button"/>
+    <Button
+        android:id="@+id/select_friends_button"
+        android:layout_width="180dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/select_restaurant_button"
+        android:text="Velg Venner"
+        android:onClick="selectFriends"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/chosen_friends"
+        android:layout_centerInParent="true"
+        android:text="Antall venner valgt: 0"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/chosen_restaurant"/>
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/submit_button"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/chosen_friends"
+        android:onClick="addBooking"
+        android:text="Legg til"/>
+</RelativeLayout>
